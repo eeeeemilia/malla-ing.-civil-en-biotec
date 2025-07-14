@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Malla Ingeniería en Biotecnología</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: #fff2f9;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .nivel {
+      margin-bottom: 40px;
+    }
+    .nivel h2 {
+      background-color: #fff7bc;
+      color: #000;
+      padding: 10px;
+      border-radius: 6px;
+      border: 2px solid #da7b92;
+      text-transform: uppercase;
+      font-weight: bold;
+      text-align: center;
+    }
+    .grid {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .ramo {
+      background-color: #f69ab0;
+      border: 2px solid #af546a;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-align: center;
+      flex: 1 1 200px;
+    }
+    .ramo.cursado {
+      background-color: #af546a;
+      color: white;
+      text-decoration: line-through;
+    }
+    .ramo.disponible {
+      background-color: #ffe5ec;
+      border: 2px solid #e39cae;
+    }
+    .ramo.bloqueado {
+      background-color: #f9c5d1;
+      border: 2px solid #d68aa0;
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <h1>Malla Interactiva - Ingeniería en Biotecnología</h1>
+  <div id="contenedor"></div>
+
+  <script>
+    const ramos = [
+  { id: "1.1", nombre: "Cálculo I para Ingeniería", requisitos: [] },
+  { id: "1.2", nombre: "Álgebra I para Ingeniería", requisitos: [] },
+  { id: "1.3", nombre: "Física I para Ingeniería", requisitos: [] },
+  { id: "1.4", nombre: "Introducción al Diseño en Ingeniería", requisitos: [] },
+  { id: "1.5", nombre: "Química general para Ingeniería", requisitos: [] },
+
+  { id: "2.1", nombre: "Cálculo II para Ingeniería", requisitos: ["1.1"] },
+  { id: "2.2", nombre: "Álgebra II para Ingeniería", requisitos: ["1.2"] },
+  { id: "2.3", nombre: "Física II para Ingeniería", requisitos: ["1.3"] },
+  { id: "2.4", nombre: "Fundamentos de Programación", requisitos: ["1.4"] },
+  { id: "2.5", nombre: "Fundamentos de Ingeniería en Biotecnología", requisitos: ["1.4"] },
+
+  { id: "3.1", nombre: "Electricidad y Magnetismo", requisitos: ["2.1", "2.3"] },
+  { id: "3.2", nombre: "Fund. Economía para Ingeniería", requisitos: ["1.1"] },
+  { id: "3.3", nombre: "Análisis estadístico", requisitos: ["2.1"] },
+  { id: "3.4", nombre: "Cálculo avanzado procesos", requisitos: ["2.1"] },
+  { id: "3.5", nombre: "Fisicoquímica I", requisitos: ["2.1", "2.3"] },
+  { id: "3.6", nombre: "Téc. laboratorio químico", requisitos: ["1.5"] },
+
+  { id: "4.1", nombre: "Inglés I", requisitos: [] },
+  { id: "4.2", nombre: "Taller diseño Ingeniería", requisitos: ["3.2"] },
+  { id: "4.3", nombre: "Ecuaciones diferenciales", requisitos: ["2.1", "2.2"] },
+  { id: "4.4", nombre: "Balances de materia y energía", requisitos: ["3.4", "3.5"] },
+  { id: "4.5", nombre: "Química orgánica I", requisitos: ["3.6"] },
+  { id: "4.6", nombre: "Fisicoquímica II", requisitos: ["3.5"] },
+
+  { id: "5.1", nombre: "Inglés II", requisitos: ["4.1"] },
+  { id: "5.2", nombre: "Finanzas para Ingeniería", requisitos: ["3.2"] },
+  { id: "5.3", nombre: "Termodinámica", requisitos: ["4.4", "4.6"] },
+  { id: "5.4", nombre: "Bioquímica", requisitos: ["4.5"] },
+  { id: "5.5", nombre: "Química orgánica II", requisitos: ["4.5"] },
+  { id: "5.6", nombre: "Métodos de cálculo", requisitos: ["2.3", "2.4", "4.4"] },
+
+  { id: "6.1", nombre: "Inglés III", requisitos: ["5.1"] },
+  { id: "6.2", nombre: "Adm. empresas", requisitos: ["5.2"] },
+  { id: "6.3", nombre: "Fenómeno de transporte", requisitos: ["4.3", "5.3"] },
+  { id: "6.4", nombre: "Biología celular", requisitos: ["5.4"] },
+  { id: "6.5", nombre: "Microbiología", requisitos: ["5.5"] },
+  { id: "6.6", nombre: "Taller de innovación", requisitos: ["4.2"] },
+
+  { id: "7.1", nombre: "Inglés IV", requisitos: ["6.1"] },
+  { id: "7.2", nombre: "Mecánica de fluidos", requisitos: ["6.3"] },
+  { id: "7.3", nombre: "Transferencia de calor", requisitos: ["6.3"] },
+  { id: "7.4", nombre: "Biología molecular", requisitos: ["6.4"] },
+  { id: "7.5", nombre: "Ingeniería económica", requisitos: ["6.2"] },
+
+  { id: "8.1", nombre: "Transferencia de masa", requisitos: ["7.2", "7.3"] },
+  { id: "8.2", nombre: "Diseño de reactores", requisitos: ["7.2", "7.3"] },
+  { id: "8.3", nombre: "Ingeniería genética", requisitos: ["7.4"] },
+  { id: "8.4", nombre: "Electivo I", requisitos: ["7.2", "7.3"] },
+  { id: "8.5", nombre: "Electivo II", requisitos: ["7.3", "7.4"] },
+
+  { id: "9.1", nombre: "Procesos de separación", requisitos: ["8.1"] },
+  { id: "9.2", nombre: "Diseño de bioreactores", requisitos: ["8.2"] },
+  { id: "9.3", nombre: "Ing. metabólica y bioinfo", requisitos: ["8.3"] },
+  { id: "9.4", nombre: "Simulación de procesos", requisitos: ["8.1"] },
+  { id: "9.5", nombre: "Diseño experimental", requisitos: ["3.3", "5.6"] },
+  { id: "9.6", nombre: "Evaluación de proyectos", requisitos: ["7.5", "8.1"] },
+
+  { id: "10.1", nombre: "Proyectos", requisitos: ["9.4"] },
+  { id: "10.2", nombre: "Planta piloto", requisitos: ["9.1"] },
+  { id: "10.3", nombre: "Dinámica y control de procesos", requisitos: [] },
+  { id: "10.4", nombre: "Electivo III", requisitos: [] },
+
+  { id: "11", nombre: "Trabajo de titulación", requisitos: [] }
+];
+
+    const estadoRamos = JSON.parse(localStorage.getItem("estadoRamos")) || {};
+
+    function guardarEstado() {
+      localStorage.setItem("estadoRamos", JSON.stringify(estadoRamos));
+    }
+
+    function puedeTomar(ramo) {
+      return ramo.requisitos.every(req => estadoRamos[req] === "cursado");
+    }
+
+    function render() {
+      const niveles = {};
+      ramos.forEach(r => {
+        const nivel = r.id.split(".")[0];
+        if (!niveles[nivel]) niveles[nivel] = [];
+        niveles[nivel].push(r);
+      });
+
+      const contenedor = document.getElementById("contenedor");
+      contenedor.innerHTML = "";
+
+      Object.entries(niveles).forEach(([nivel, lista]) => {
+        const divNivel = document.createElement("div");
+        divNivel.classList.add("nivel");
+        divNivel.innerHTML = `<h2>Nivel ${nivel}</h2>`;
+
+        const grid = document.createElement("div");
+        grid.classList.add("grid");
+
+        lista.forEach(ramo => {
+          const div = document.createElement("div");
+          div.classList.add("ramo");
+          div.textContent = ramo.nombre;
+
+          const estado = estadoRamos[ramo.id];
+          if (estado === "cursado") {
+            div.classList.add("cursado");
+          } else if (puedeTomar(ramo)) {
+            div.classList.add("disponible");
+          } else {
+            div.classList.add("bloqueado");
+          }
+
+          div.onclick = () => {
+            if (!puedeTomar(ramo) && estado !== "cursado") return;
+            if (estado === "cursado") {
+              delete estadoRamos[ramo.id];
+            } else {
+              estadoRamos[ramo.id] = "cursado";
+            }
+            guardarEstado();
+            render();
+          };
+
+          grid.appendChild(div);
+        });
+
+        divNivel.appendChild(grid);
+        contenedor.appendChild(divNivel);
+      });
+    }
+
+    render();
+  </script>
+</body>
+</html>
